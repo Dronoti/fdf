@@ -19,19 +19,19 @@ int	main (int argc, char **argv)
 
 	if (argc != 2)
 		ft_error("Invalid number of arguments");
-	fd = open(argv[1], O_RDONLY);
-	if (fd < 0)
-		ft_error("Failed open file");
+	fd = ft_open(argv[1]);
 	mlx = (t_mlx *)malloc(sizeof(t_mlx));
 	if (!mlx)
 		ft_error("Malloc error");
 	ft_malloc_map(fd, &mlx);
 	ft_close(fd);
-	fd = open(argv[1], O_RDONLY);
-	if (fd < 0)
-		ft_error("Failed open file");
+	fd = ft_open(argv[1]);
 	ft_set_arr(fd, &mlx);
 	ft_close(fd);
-	free(mlx);
+	mlx->mlx = mlx_init();
+	mlx->win = mlx_new_window(mlx->mlx, 1280, 720, "FDF");
+	ft_draw_map(mlx);
+	mlx_key_hook(mlx->win, &ft_handler_keys, &mlx);
+	mlx_loop(mlx->mlx);
 	return (0);
 }

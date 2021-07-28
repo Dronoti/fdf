@@ -26,6 +26,8 @@ typedef struct s_mlx
 	int		width;
 	int		height;
 	int		**coord;
+	int		moving_x;
+	int		moving_y;
 }				t_mlx;
 
 void	ft_putstr_fd(char *s, int fd);
@@ -33,6 +35,7 @@ void	ft_putchar_fd(char c, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_error(char *str);
 void	ft_close(int fd);
+int		ft_open(char *name);
 void	ft_malloc_map(int fd, t_mlx **mlx);
 void	ft_get_size_map(int fd, t_mlx **mlx);
 int		ft_count_word(char *s, char c);
@@ -42,5 +45,9 @@ void	ft_getarr(char **strsplit, char *s, char c, int n);
 void	ft_freearr(char ***strsplit, int i);
 char	*ft_substr(char *s, int start, int len);
 int		ft_atoi(const char *nptr);
+void	ft_draw_line(float x0, float y0, float x1, float y1, t_mlx *mlx);
+void	ft_draw_map(t_mlx *mlx);
+void	ft_3d(float *x, float *y, int z);
+int		ft_handler_keys(int key, t_mlx	**mlx);
 
 #endif

@@ -51,6 +51,7 @@ void	ft_get_size_map(int fd, t_mlx **mlx)
 		height++;
 		read = get_next_line(fd, &line);
 	}
+	free(line);
 	if (read < 0)
 		ft_error("Read error");
 	else
@@ -89,19 +90,19 @@ void	ft_set_arr(int fd, t_mlx **mlx)
 	read = get_next_line(fd, &line);
 	while (read > 0)
 	{
-		x = 0;
+		x = -1;
 		nbrs = ft_split(line, ' ');
-		while (nbrs[x])
+		while (nbrs[++x])
 		{
 			(*mlx)->coord[y][x] = ft_atoi(nbrs[x]);
 			free(nbrs[x]);
-			x++;
 		}
 		free(nbrs);
 		free(line);
 		y++;
 		read = get_next_line(fd, &line);
 	}
+	free(line);
 	if (read < 0)
 		ft_error("Read error");
 }
