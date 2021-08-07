@@ -12,77 +12,107 @@
 
 #include "../includes/fdf.h"
 
-void	ft_3d(float *x, float *y, int z)
+void	ft_set_points(t_point *p, t_mlx *mlx)
 {
-	*x = (*x - *y) * cos(0.8);
-	*y = (*x + *y) * sin(0.8) - z * 2;
+	mlx->z0 = mlx->coord[p->y0][p->x0];
+	mlx->z1 = mlx->coord[p->y1][p->x1];
+	if (mlx->z0 || mlx->z1)
+		mlx->color = 0xe80c0c;
+	else
+		mlx->color = 0xffffff;
+	p->x0 = p->x0 * mlx->scale - (mlx->width * mlx->scale) / 2;
+	p->x1 = p->x1 * mlx->scale - (mlx->width * mlx->scale) / 2;
+	p->y0 = p->y0 * mlx->scale - (mlx->height * mlx->scale) / 2;
+	p->y1 = p->y1 * mlx->scale - (mlx->height * mlx->scale) / 2;
+	mlx->z0 *= mlx->scale;
+	mlx->z1 *= mlx->scale;
+	ft_3d_rotate(p, mlx);
+	p->x0 += 1280 / 2 + mlx->moving_x;
+	p->x1 += 1280 / 2 + mlx->moving_x;
+	p->y0 += (720 + mlx->height * mlx->scale) / 2 + mlx->moving_y;
+	p->y1 += (720 + mlx->height * mlx->scale) / 2 + mlx->moving_y;
 }
 
-void	ft_draw_line(float x0, float y0, float x1, float y1, t_mlx *mlx)
+void	ft_3d_rotate(t_point *p, t_mlx *mlx)
 {
-	float	deltax;
-	float	deltay;
-	int		max;
-	int		scale;
-	int		z0;
-	int		z1;
-	int		color;
-
-	z0 = mlx->coord[(int)y0][(int)x0];
-	z1 = mlx->coord[(int)y1][(int)x1];
-
-	scale = 30;
-	x0 *= scale;
-	x1 *= scale;
-	y0 *= scale;
-	y1 *= scale;
-
-	if (z0 || z1)
-		color = 0xe80c0c;
-	else
-		color = 0xffffff;
-
-	ft_3d(&x0, &y0, z0);
-	ft_3d(&x1, &y1, z1);
-
-	x0 += mlx->moving_x;
-	y0 += mlx->moving_y;
-	x1 += mlx->moving_x;
-	y1 += mlx->moving_y;
-
-	deltax = (x1 - x0);
-	deltay = (y1 - y0);
-	if (abs((int)deltax) >= abs((int)deltay))
-		max = abs((int)deltax);
-	else
-		max = abs((int)deltay);
-	deltax /= max;
-	deltay /= max;
-	while ((int)(x0 - x1) || (int)(y0 - y1))
-	{
-		mlx_pixel_put(mlx->mlx, mlx->win, x0, y0, color);
-		x0 += deltax;
-		y0 += deltay;
-	}
+	p->x0 = (p->x0 - p->y0) * cos(mlx->angle_x);
+	p->y0 = (p->x0 + p->y0) * sin(mlx->angle_y) - mlx->z0;
+	p->x1 = (p->x1 - p->y1) * cos(mlx->angle_x);
+	p->y1 = (p->x1 + p->y1) * sin(mlx->angle_y) - mlx->z1;
 }
 
-void ft_draw_map(t_mlx *mlx)
+void	ft_print_pixels(t_point p, t_mlx *mlx)
 {
-	int	x;
-	int	y;
+	int	delta_x;
+	int	delta_y;
+	int	error;
+	int	y_step;
 
-	y = 0;
-	while (y < mlx->height)
+	delta_x = p.x1 - p.x0;
+	delta_y = abs(p.y1 - p.y0);
+	error = delta_x / 2;
+	y_step = -1;
+	if (p.y0 < p.y1)
+		y_step = 1;
+	while (p.x0 <= p.x1)
 	{
-		x = 0;
-		while (x < mlx->width)
+		if (mlx->direction)
+			my_mlx_pixel_put(&mlx, p.y0, p.x0, mlx->color);
+		else
+			my_mlx_pixel_put(&mlx, p.x0, p.y0, mlx->color);
+		error -= delta_y;
+		if (error < 0)
 		{
-			if (x < mlx->width - 1)
-				ft_draw_line(x, y, x + 1, y, mlx);
-			if (y < mlx->height - 1)
-				ft_draw_line(x, y, x, y + 1, mlx);
-			x++;
+			p.y0 += y_step;
+			error += delta_x;
 		}
-		y++;
+		p.x0++;
 	}
+}
+
+void	ft_draw_line(t_point p, t_mlx *mlx)
+{
+	ft_set_points(&p, mlx);
+	mlx->direction = 0;
+	if (abs(p.y1 - p.y0) > abs(p.x1 - p.x0))
+	{
+		ft_swap(&p.x0, &p.y0);
+		ft_swap(&p.x1, &p.y1);
+		mlx->direction = 1;
+	}
+	if (p.x0 > p.x1)
+	{
+		ft_swap(&p.x0, &p.x1);
+		ft_swap(&p.y0, &p.y1);
+	}
+	ft_print_pixels(p, mlx);
+}
+
+void	ft_draw_map(t_mlx *mlx)
+{
+	t_point	p;
+
+	p.y0 = 0;
+	while (p.y0 < mlx->height)
+	{
+		p.x0 = 0;
+		while (p.x0 < mlx->width)
+		{
+			if (p.x0 < mlx->width - 1)
+			{
+				p.x1 = p.x0 + 1;
+				p.y1 = p.y0;
+				ft_draw_line(p, mlx);
+			}
+			if (p.y0 < mlx->height - 1)
+			{
+				p.x1 = p.x0;
+				p.y1 = p.y0 + 1;
+				ft_draw_line(p, mlx);
+			}
+			p.x0++;
+		}
+		p.y0++;
+	}
+	mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->img, 0, 0);
 }

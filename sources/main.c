@@ -12,7 +12,7 @@
 
 #include "../includes/fdf.h"
 
-int	main (int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	int		fd;
 	t_mlx	*mlx;
@@ -28,8 +28,7 @@ int	main (int argc, char **argv)
 	fd = ft_open(argv[1]);
 	ft_set_arr(fd, &mlx);
 	ft_close(fd);
-	mlx->mlx = mlx_init();
-	mlx->win = mlx_new_window(mlx->mlx, 1280, 720, "FDF");
+	ft_start(&mlx);
 	ft_draw_map(mlx);
 	mlx_key_hook(mlx->win, &ft_handler_keys, &mlx);
 	mlx_loop(mlx->mlx);

@@ -12,7 +12,7 @@
 
 #include "../includes/fdf.h"
 
-int	ft_handler_keys(int key, t_mlx	**mlx)
+int	ft_handler_keys(int key, t_mlx **mlx)
 {
 	if (key == 126)
 		(*mlx)->moving_y -= 20;
