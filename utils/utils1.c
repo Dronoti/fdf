@@ -35,3 +35,17 @@ void	ft_error(char *str)
 	ft_putendl_fd(str, 2);
 	exit(EXIT_FAILURE);
 }
+
+void	ft_draw_black(t_mlx *mlx)
+{
+	int		size;
+	char	*dst;
+
+	size = 1280 * 720 * (mlx->bits / 8);
+	dst = mlx->addr;
+	while (size--)
+	{
+		dst++;
+		*(unsigned int *)dst = 0;
+	}
+}

@@ -12,6 +12,14 @@
 
 #include "../includes/fdf.h"
 
+void	ft_manual(t_mlx *mlx)
+{
+	mlx_string_put(mlx->mlx, mlx->win, 100, 17, 0xffffff,
+		   "MANUAL | Move: Drag & Drop | Change projection: P | ");
+	mlx_string_put(mlx->mlx, mlx->win, 620, 18, 0xffffff,
+		   "Rotate: Arrows | Scale: +/- | Restart: R | Exit: Esc");
+}
+
 int	main(int argc, char **argv)
 {
 	int		fd;
@@ -30,7 +38,11 @@ int	main(int argc, char **argv)
 	ft_close(fd);
 	ft_start(&mlx);
 	ft_draw_map(mlx);
-	mlx_key_hook(mlx->win, &ft_handler_keys, &mlx);
+	mlx_hook(mlx->win, 2, 0, &ft_handler_keys, &mlx);
+	mlx_hook(mlx->win, 4, 0, &ft_click, &mlx);
+	mlx_hook(mlx->win, 5, 0, &ft_unclick, &mlx);
+	mlx_hook(mlx->win, 6, 0, &ft_move, &mlx);
+	mlx_hook(mlx->win, 17, 0, &ft_exit, mlx);
 	mlx_loop(mlx->mlx);
 	return (0);
 }

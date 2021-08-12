@@ -47,8 +47,11 @@ void	ft_start(t_mlx **mlx)
 		(*mlx)->scale = 720 / (*mlx)->height / 2;
 	(*mlx)->moving_x = 0;
 	(*mlx)->moving_y = 0;
-	(*mlx)->angle_x = 0.9;
-	(*mlx)->angle_y = 0.9;
+	(*mlx)->angle_x = 0;
+	(*mlx)->angle_y = 0;
+	(*mlx)->save_x = 0;
+	(*mlx)->save_y = 0;
+	(*mlx)->projection = 1;
 }
 
 void	ft_swap(int *a, int *b)

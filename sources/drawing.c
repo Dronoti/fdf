@@ -35,10 +35,30 @@ void	ft_set_points(t_point *p, t_mlx *mlx)
 
 void	ft_3d_rotate(t_point *p, t_mlx *mlx)
 {
-	p->x0 = (p->x0 - p->y0) * cos(mlx->angle_x);
-	p->y0 = (p->x0 + p->y0) * sin(mlx->angle_y) - mlx->z0;
-	p->x1 = (p->x1 - p->y1) * cos(mlx->angle_x);
-	p->y1 = (p->x1 + p->y1) * sin(mlx->angle_y) - mlx->z1;
+	int	y0;
+	int	y1;
+	int	x0;
+	int	x1;
+
+	y0 = p->y0;
+	y1 = p->y1;
+	x0 = p->x0;
+	x1 = p->x1;
+	p->y0 = p->y0 * cos(mlx->angle_x) + mlx->z0 * sin(mlx->angle_x);
+	p->y1 = p->y1 * cos(mlx->angle_x) + mlx->z1 * sin(mlx->angle_x);
+	mlx->z0 = -y0 * sin(mlx->angle_x) + mlx->z0 * cos(mlx->angle_x);
+	mlx->z1 = -y1 * sin(mlx->angle_x) + mlx->z1 * cos(mlx->angle_x);
+	p->x0 = p->x0 * cos(mlx->angle_y) + mlx->z0 * sin(mlx->angle_y);
+	p->x1 = p->x1 * cos(mlx->angle_y) + mlx->z1 * sin(mlx->angle_y);
+	mlx->z0 = -x0 * sin(mlx->angle_y) + mlx->z0 * cos(mlx->angle_y);
+	mlx->z1 = -x1 * sin(mlx->angle_y) + mlx->z1 * cos(mlx->angle_y);
+	if (mlx->projection)
+	{
+		p->x0 = (p->x0 - p->y0) * cos(0.5);
+		p->y0 = (p->x0 + p->y0) * sin(0.5) - mlx->z0;
+		p->x1 = (p->x1 - p->y1) * cos(0.5);
+		p->y1 = (p->x1 + p->y1) * sin(0.5) - mlx->z1;
+	}
 }
 
 void	ft_print_pixels(t_point p, t_mlx *mlx)
@@ -92,11 +112,12 @@ void	ft_draw_map(t_mlx *mlx)
 {
 	t_point	p;
 
-	p.y0 = 0;
-	while (p.y0 < mlx->height)
+	ft_draw_black(mlx);
+	p.y0 = -1;
+	while (++p.y0 < mlx->height)
 	{
-		p.x0 = 0;
-		while (p.x0 < mlx->width)
+		p.x0 = -1;
+		while (++p.x0 < mlx->width)
 		{
 			if (p.x0 < mlx->width - 1)
 			{
@@ -110,9 +131,8 @@ void	ft_draw_map(t_mlx *mlx)
 				p.y1 = p.y0 + 1;
 				ft_draw_line(p, mlx);
 			}
-			p.x0++;
 		}
-		p.y0++;
 	}
 	mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->img, 0, 0);
+	ft_manual(mlx);
 }

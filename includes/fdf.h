@@ -40,14 +40,21 @@ typedef struct s_mlx
 	int		**coord;
 	int		z0;
 	int		z1;
-	float	angle_x;
-	float	angle_y;
 
-	int		moving_x;
-	int		moving_y;
 	int		direction;
 	int		color;
 	int		scale;
+
+	int		click;
+	int		prev_x;
+	int		prev_y;
+	int		moving_x;
+	int		moving_y;
+	float	angle_x;
+	float	angle_y;
+	int		save_x;
+	int		save_y;
+	int		projection;
 }				t_mlx;
 
 void	ft_putstr_fd(char *s, int fd);
@@ -74,5 +81,15 @@ int		ft_handler_keys(int key, t_mlx **mlx);
 void	ft_start(t_mlx **mlx);
 void	my_mlx_pixel_put(t_mlx **mlx, int x, int y, int color);
 void	ft_print_pixels(t_point p, t_mlx *mlx);
+void	ft_draw_black(t_mlx *mlx);
+void	ft_rotate(int key, t_mlx **mlx);
+void	ft_scale(int key, t_mlx **mlx);
+int		ft_click(int key, int x, int y, t_mlx **mlx);
+int		ft_unclick(int key, int x, int y, t_mlx **mlx);
+int		ft_move(int x, int y, t_mlx **mlx);
+int		ft_exit(void);
+void	ft_restart(t_mlx **mlx);
+void	ft_manual(t_mlx *mlx);
+void	ft_projection(t_mlx **mlx);
 
 #endif
