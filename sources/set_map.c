@@ -6,7 +6,7 @@
 /*   By: bkael <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/26 19:43:17 by bkael             #+#    #+#             */
-/*   Updated: 2021/07/26 19:43:20 by bkael            ###   ########.fr       */
+/*   Updated: 2021/08/13 19:43:20 by bkael            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,14 @@ void	ft_malloc_map(int fd, t_mlx **mlx)
 	if (!(*mlx)->height || !(*mlx)->width)
 		ft_error("Invalid map");
 	(*mlx)->coord = (int **)malloc(sizeof(int *) * (*mlx)->height);
-	if (!(*mlx)->coord)
+	(*mlx)->color = (int **)malloc(sizeof(int *) * (*mlx)->height);
+	if (!(*mlx)->coord || !(*mlx)->color)
 		ft_error("Malloc error");
 	while (i < (*mlx)->height)
 	{
 		(*mlx)->coord[i] = (int *)malloc(sizeof(int) * (*mlx)->width);
-		if (!(*mlx)->coord[i])
+		(*mlx)->color[i] = (int *)malloc(sizeof(int) * (*mlx)->width);
+		if (!(*mlx)->coord[i] || !(*mlx)->color[i])
 			ft_error("Malloc error");
 		i++;
 	}
@@ -94,7 +96,7 @@ void	ft_set_arr(int fd, t_mlx **mlx)
 		nbrs = ft_split(line, ' ');
 		while (nbrs[++x])
 		{
-			(*mlx)->coord[y][x] = ft_atoi(nbrs[x]);
+			ft_set_num_n_color(x, y, nbrs[x], mlx);
 			free(nbrs[x]);
 		}
 		free(nbrs);

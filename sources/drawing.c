@@ -6,7 +6,7 @@
 /*   By: bkael <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/28 07:56:57 by bkael             #+#    #+#             */
-/*   Updated: 2021/07/28 07:57:00 by bkael            ###   ########.fr       */
+/*   Updated: 2021/08/13 07:57:00 by bkael            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,14 @@ void	ft_set_points(t_point *p, t_mlx *mlx)
 {
 	mlx->z0 = mlx->coord[p->y0][p->x0];
 	mlx->z1 = mlx->coord[p->y1][p->x1];
-	if (mlx->z0 || mlx->z1)
-		mlx->color = 0xe80c0c;
+	if (mlx->color[p->y0][p->x0] != -1)
+		p->print_color = mlx->color[p->y0][p->x0];
+	else if (mlx->color[p->y1][p->x1] != -1)
+		p->print_color = mlx->color[p->y1][p->x1];
+	else if (mlx->z0 || mlx->z1)
+		p->print_color = 0xff0000;
 	else
-		mlx->color = 0xffffff;
+		p->print_color = 0xffffff;
 	p->x0 = p->x0 * mlx->scale - (mlx->width * mlx->scale) / 2;
 	p->x1 = p->x1 * mlx->scale - (mlx->width * mlx->scale) / 2;
 	p->y0 = p->y0 * mlx->scale - (mlx->height * mlx->scale) / 2;
@@ -77,9 +81,9 @@ void	ft_print_pixels(t_point p, t_mlx *mlx)
 	while (p.x0 <= p.x1)
 	{
 		if (mlx->direction)
-			my_mlx_pixel_put(&mlx, p.y0, p.x0, mlx->color);
+			my_mlx_pixel_put(&mlx, p.y0, p.x0, p.print_color);
 		else
-			my_mlx_pixel_put(&mlx, p.x0, p.y0, mlx->color);
+			my_mlx_pixel_put(&mlx, p.x0, p.y0, p.print_color);
 		error -= delta_y;
 		if (error < 0)
 		{

@@ -6,7 +6,7 @@
 /*   By: bkael <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/26 12:10:47 by bkael             #+#    #+#             */
-/*   Updated: 2021/07/26 12:12:45 by bkael            ###   ########.fr       */
+/*   Updated: 2021/08/13 12:12:45 by bkael            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ typedef struct s_point
 	int	x1;
 	int	y0;
 	int	y1;
+	int	print_color;
 }				t_point;
 
 typedef struct s_mlx
@@ -42,7 +43,7 @@ typedef struct s_mlx
 	int		z1;
 
 	int		direction;
-	int		color;
+	int		**color;
 	int		scale;
 
 	int		click;
@@ -91,5 +92,8 @@ int		ft_exit(void);
 void	ft_restart(t_mlx **mlx);
 void	ft_manual(t_mlx *mlx);
 void	ft_projection(t_mlx **mlx);
+void	ft_set_num_n_color(int x, int y, char *nbrs, t_mlx **mlx);
+int		ft_check_hex(char n);
+int		ft_convert_color(char *nptr);
 
 #endif
