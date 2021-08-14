@@ -58,10 +58,10 @@ void	ft_3d_rotate(t_point *p, t_mlx *mlx)
 	mlx->z1 = -x1 * sin(mlx->angle_y) + mlx->z1 * cos(mlx->angle_y);
 	if (mlx->projection)
 	{
-		p->x0 = (p->x0 - p->y0) * cos(0.5);
-		p->y0 = (p->x0 + p->y0) * sin(0.5) - mlx->z0;
-		p->x1 = (p->x1 - p->y1) * cos(0.5);
-		p->y1 = (p->x1 + p->y1) * sin(0.5) - mlx->z1;
+		p->x0 = (p->x0 - p->y0) * cos(0.523599);
+		p->y0 = (p->x0 + p->y0) * sin(0.523599) - mlx->z0;
+		p->x1 = (p->x1 - p->y1) * cos(0.523599);
+		p->y1 = (p->x1 + p->y1) * sin(0.523599) - mlx->z1;
 	}
 }
 
